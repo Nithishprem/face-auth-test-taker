@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Navigate } from "react-router-dom";
+import UserContext from "../context/UserContent";
 
 function ProtectedRouter({ children }) {
-  let loggedIn = true;
+  let { user } = useContext(UserContext);
 
-  if (!loggedIn) return <Navigate to="login" />;
+  if (!user || !user.number || !user.snapshot) return <Navigate to="login" />;
 
   return <div>{children}</div>;
 }

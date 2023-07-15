@@ -1,7 +1,7 @@
 import nithish from "../assets/images/nithish2.png";
 
 export const USER = {
-  number: "6281594686",
+  number: import.meta.env.VITE_NUMBER,
   img: nithish,
 };
 

@@ -1,4 +1,4 @@
-import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
+import { Navigate, Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import LoginPage from "./pages/LoginPage";
 import ProtectedRouter from "./components/ProtectedRouter";
 import AssessmentPage from "./pages/AssessmentPage";
@@ -10,6 +10,7 @@ function App() {
   return (
     <Router>
       <Routes>
+        <Route path="/" element={<Navigate to={"/login"} />} />
         <Route path="/login" element={<LoginPage />} />
         <Route
           path="/assessment"
