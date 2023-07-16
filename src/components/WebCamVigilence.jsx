@@ -4,9 +4,10 @@ import { CircularProgress } from "@mui/material";
 import * as faceapi from "face-api.js";
 import { BEST_MATCH_DISTANCE, BEST_MATCH_DISTANCE_VIGILANCE } from "../utils/constants";
 
-function WebCamVigilence({ videoRef }) {
+function WebCamVigilence({ videoRef, matchDistance, setMatchDistance }) {
   const [modelsLoaded, setModelsLoaded] = React.useState(false);
   const [captureVideo, setCaptureVideo] = React.useState(false);
+
   const { user } = useContext(UserContext);
 
   // const videoRef = React.useRef();
@@ -82,6 +83,7 @@ function WebCamVigilence({ videoRef }) {
             const userImageDescriptor = await faceapi.computeFaceDescriptor(imgRef.current);
             const bestMatch = faceMatcher.findBestMatch(userImageDescriptor);
             // console.log("match result", bestMatch.toString()); // Perform authentication or display result
+            setMatchDistance(bestMatch.distance);
             if (bestMatch.distance < BEST_MATCH_DISTANCE_VIGILANCE) {
               console.log("user match", true, bestMatch.distance);
             } else {
@@ -116,41 +118,7 @@ function WebCamVigilence({ videoRef }) {
   return (
     <div className="flex flex-col justify-center items-center">
       {!modelsLoaded && <CircularProgress size="3rem" />}
-      {/* <div style={{ textAlign: "center", padding: "10px" }}>
-          {captureVideo && modelsLoaded ? (
-            <Button
-              onClick={closeWebcam}
-              variant="contained"
-              // style={{
-              //   cursor: "pointer",
-              //   backgroundColor: "green",
-              //   color: "white",
-              //   padding: "15px",
-              //   fontSize: "25px",
-              //   border: "none",
-              //   borderRadius: "10px",
-              // }}
-            >
-              Close Webcam
-            </Button>
-          ) : (
-            <Button
-              onClick={startVideo}
-              variant="contained"
-              // style={{
-              //   cursor: "pointer",
-              //   backgroundColor: "green",
-              //   color: "white",
-              //   padding: "15px",
-              //   fontSize: "25px",
-              //   border: "none",
-              //   borderRadius: "10px",
-              // }}
-            >
-              Open Webcam
-            </Button>
-          )}
-        </div> */}
+
       {captureVideo ? (
         modelsLoaded ? (
           <div>
@@ -164,6 +132,7 @@ function WebCamVigilence({ videoRef }) {
               />
               <canvas ref={canvasRef} style={{ position: "absolute" }} />
             </div>
+            {matchDistance && <div className="text-center">Match distance: {matchDistance}</div>}
           </div>
         ) : (
           <div>loading...</div>

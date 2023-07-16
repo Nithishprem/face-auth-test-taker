@@ -3,8 +3,8 @@ import LoginPage from "./pages/LoginPage";
 import ProtectedRouter from "./components/ProtectedRouter";
 import AssessmentPage from "./pages/AssessmentPage";
 import ResultPage from "./pages/ResultPage";
-import WebcamPage from "./pages/WebcamPage";
 import WebcamPageGPT from "./pages/WebcamGPT";
+import WebcamFaceMatch from "./pages/WebcamFaceMatch";
 
 function App() {
   return (
@@ -44,6 +44,7 @@ function App() {
             // </ProtectedRouter>
           }
         />{" "}
+        <Route path="/webcam-facematch" element={<WebcamFaceMatch />} />
       </Routes>
     </Router>
   );

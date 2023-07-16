@@ -10,6 +10,7 @@ import PauseIcon from "@mui/icons-material/Pause";
 
 function AssessmentPage() {
   const { user } = useContext(UserContext);
+  const [matchDistance, setMatchDistance] = React.useState(null);
 
   const videoRef = useRef();
 
@@ -33,11 +34,11 @@ function AssessmentPage() {
       <TopBar />
 
       <div className="max-w-full hidden">
-        <WebCamVigilence videoRef={videoRef} />
+        <WebCamVigilence videoRef={videoRef} matchDistance={matchDistance} setMatchDistance={setMatchDistance} />
       </div>
 
       <div className="w-full max-w-full flex justify-center items-center pt-20 overflow-x-hidden px-4">
-        <TestComponent handleResultNavigate={handleResultNavigate} />
+        <TestComponent handleResultNavigate={handleResultNavigate} matchDistance={matchDistance} />
       </div>
     </div>
   );
@@ -45,7 +46,7 @@ function AssessmentPage() {
 
 export default AssessmentPage;
 
-function TestComponent({ handleResultNavigate }) {
+function TestComponent({ handleResultNavigate, matchDistance }) {
   const [videoPlayedOnce, setVideoPlayedOnce] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
 
@@ -87,8 +88,10 @@ function TestComponent({ handleResultNavigate }) {
       <div>
         <p className="mt-4 text-2xl font-medium">Watch the below video and answer the question that follows</p>
 
+        {matchDistance && <div className=" my-2 text-start">Match distance: {matchDistance}</div>}
+
         <div
-          className="mt-4 w-full max-w-[400px] relative"
+          className="mt-4 w-full max-w-[400px] relative bg-gray-300 aspect-video"
           onMouseEnter={handleShowIcon}
           onMouseLeave={handleHideIcon}
           onMouseMove={handleShowIcon}

@@ -1,7 +1,8 @@
-import nithish from "../assets/images/nithish2.png";
+import nithish from "../assets/images/nithish3.jpeg";
 
 export const USER = {
   number: import.meta.env.VITE_NUMBER,
+  name: "John",
   img: nithish,
 };
 

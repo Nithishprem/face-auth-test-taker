@@ -7,7 +7,7 @@ function ResultPage() {
   return (
     <div className="w-screen h-screen px-4">
       <TopBar />
-      <div className="w-full mt-16">
+      <div className="w-full pt-20">
         <p className="text-2xl font-medium">Assessment Result</p>
 
         <div className="flex justify-start items-center gap-4 mt-4">

@@ -5,7 +5,7 @@ import { useContext } from "react";
 import UserContext from "../context/UserContent";
 
 function LoginPage() {
-  const [number, setNumber] = useState();
+  const [number, setNumber] = useState("");
 
   const [showFaceDetection, setShowFaceDetection] = useState(false);
 
