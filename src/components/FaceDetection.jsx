@@ -2,9 +2,10 @@ import { CircularProgress } from "@mui/material";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { ReactComponent as LockIcon } from "../assets/browser-lock-icon.svg";
 import UserContext from "../context/UserContent";
-import { USER } from "../utils/constants";
+import { BEST_MATCH_DISTANCE, USER } from "../utils/constants";
 import { useNavigate } from "react-router-dom";
-import WebcamPageGPT from "../pages/WebcamGPT";
+import WebcamFaceAuth from "../pages/WebcamFaceAuth";
+import WebcamFaceAuth2 from "./WebcamFaceAuth2";
 
 function FaceDetection({ number }) {
   const [videoDevices, setVideoDevices] = useState(null);
@@ -89,6 +90,7 @@ function Permissionhandler({ setVideoDevices, handlePermissionsLoaded }) {
 
 function FaceAuthenticate({ number }) {
   const { handleLogin } = useContext(UserContext);
+  const [matchDistance, setMatchDistance] = useState(null);
   const navigate = useNavigate();
 
   const handleAuthSuccess = (snapshot) => {
@@ -102,9 +104,26 @@ function FaceAuthenticate({ number }) {
 
   const handleAuthenticationFailed = () => {};
 
+  useEffect(() => {
+    if (matchDistance && matchDistance < BEST_MATCH_DISTANCE) {
+      handleAuthSuccess();
+    }
+  }, [matchDistance]);
+
   return (
     <div className="w-screen h-screen flex justify-center items-center">
-      <WebcamPageGPT handleAuthSuccess={handleAuthSuccess} />
+      {/* <WebcamFaceAuth handleAuthSuccess={handleAuthSuccess} /> */}
+      <WebcamFaceAuth2
+        matchDistance={matchDistance}
+        setMatchDistance={setMatchDistance}
+        uploadedImageSrc={USER.img}
+        img1Class={"hidden"}
+        img2Class={"hidden"}
+        camClass={{
+          visbility: "hidden",
+          position: "relative",
+        }}
+      />
     </div>
   );
 }

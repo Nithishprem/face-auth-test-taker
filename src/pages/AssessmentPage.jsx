@@ -7,6 +7,8 @@ import TopBar from "../components/TopBar";
 import WebCamVigilence from "../components/WebCamVigilence";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import PauseIcon from "@mui/icons-material/Pause";
+import WebcamFaceAuth2 from "../components/WebcamFaceAuth2";
+import { USER } from "../utils/constants";
 
 function AssessmentPage() {
   const { user } = useContext(UserContext);
@@ -25,7 +27,7 @@ function AssessmentPage() {
 
   console.log("user", user);
 
-  if (!user?.snapshot || !user?.number) {
+  if (!user?.number) {
     return <Navigate to={"/login"} />;
   }
 
@@ -33,8 +35,24 @@ function AssessmentPage() {
     <div className="w-full mb-20">
       <TopBar />
 
-      <div className="max-w-full hidden">
-        <WebCamVigilence videoRef={videoRef} matchDistance={matchDistance} setMatchDistance={setMatchDistance} />
+      <div className="max-w-full">
+        {/* <WebCamVigilence videoRef={videoRef} matchDistance={matchDistance} setMatchDistance={setMatchDistance} /> */}
+        <WebcamFaceAuth2
+          matchDistance={matchDistance}
+          setMatchDistance={setMatchDistance}
+          uploadedImageSrc={USER.img}
+          img1Class={"hidden"}
+          img2Class={"hidden"}
+          camClass={{
+            visibility: "hidden",
+            // position: "relative",
+          }}
+        />
+        <div className="h-6">
+          {matchDistance !== null && (
+            <div className="text-center mt-10">Image similarity distance: {matchDistance}</div>
+          )}
+        </div>
       </div>
 
       <div className="w-full max-w-full flex justify-center items-center pt-20 overflow-x-hidden px-4">
@@ -88,7 +106,7 @@ function TestComponent({ handleResultNavigate, matchDistance }) {
       <div>
         <p className="mt-4 text-2xl font-medium">Watch the below video and answer the question that follows</p>
 
-        {matchDistance && <div className=" my-2 text-start">Match distance: {matchDistance}</div>}
+        {/* {matchDistance && <div className=" my-2 text-start">Match distance: {matchDistance}</div>} */}
 
         <div
           className="mt-4 w-full max-w-[400px] relative bg-gray-300 aspect-video"

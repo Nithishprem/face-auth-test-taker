@@ -4,7 +4,7 @@ import { BEST_MATCH_DISTANCE, USER } from "../utils/constants";
 import { saveAs } from "file-saver";
 import { Button, CircularProgress } from "@mui/material";
 
-function WebcamPageGPT({ handleAuthSuccess }) {
+function WebcamFaceAuth({ handleAuthSuccess }) {
   const [modelsLoaded, setModelsLoaded] = React.useState(false);
   const [captureVideo, setCaptureVideo] = React.useState(false);
   const [matchDistance, setMatchDistance] = React.useState(null);
@@ -186,4 +186,4 @@ function WebcamPageGPT({ handleAuthSuccess }) {
   );
 }
 
-export default WebcamPageGPT;
+export default WebcamFaceAuth;

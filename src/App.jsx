@@ -3,8 +3,11 @@ import LoginPage from "./pages/LoginPage";
 import ProtectedRouter from "./components/ProtectedRouter";
 import AssessmentPage from "./pages/AssessmentPage";
 import ResultPage from "./pages/ResultPage";
-import WebcamPageGPT from "./pages/WebcamGPT";
 import WebcamFaceMatch from "./pages/WebcamFaceMatch";
+import FaceSimilarityFinder from "./pages/FaceSimilarityFinder";
+import FaceSimilarityWebcamImage from "./pages/FaceSimilarityWebcamImage";
+import FaceSimilarityUser from "./pages/FaceSimilarityUser";
+import { USER } from "./utils/constants";
 
 function App() {
   return (
@@ -36,15 +39,10 @@ function App() {
             // </ProtectedRouter>
           }
         />{" "} */}
-        <Route
-          path="/webcam-page"
-          element={
-            // <ProtectedRouter>
-            <WebcamPageGPT />
-            // </ProtectedRouter>
-          }
-        />{" "}
         <Route path="/webcam-facematch" element={<WebcamFaceMatch />} />
+        <Route path="face-similarity" element={<FaceSimilarityFinder />} />
+        <Route path="/face-similarity-webcam-image" element={<FaceSimilarityWebcamImage />} />
+        <Route path="face-similarity-user" element={<FaceSimilarityUser />} />
       </Routes>
     </Router>
   );

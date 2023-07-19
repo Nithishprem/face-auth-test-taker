@@ -5,7 +5,7 @@ import UserContext from "../context/UserContent";
 function ProtectedRouter({ children }) {
   let { user } = useContext(UserContext);
 
-  if (!user || !user.number || !user.snapshot) return <Navigate to="/login" />;
+  if (!user || !user.number) return <Navigate to="/login" />;
 
   return <div>{children}</div>;
 }
