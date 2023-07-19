@@ -10,6 +10,6 @@ export const routes = {
   login: "/login",
 };
 
-export const BEST_MATCH_DISTANCE = 0.6;
+export const BEST_MATCH_DISTANCE = 0.45;
 
-export const BEST_MATCH_DISTANCE_VIGILANCE = 0.65;
+export const BEST_MATCH_DISTANCE_VIGILANCE = 0.5;

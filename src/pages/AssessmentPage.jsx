@@ -25,7 +25,7 @@ function AssessmentPage() {
     navigate("/result");
   };
 
-  console.log("user", user);
+  // console.log("user", user);
 
   if (!user?.number) {
     return <Navigate to={"/login"} />;
