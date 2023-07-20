@@ -7,7 +7,6 @@ import WebcamFaceMatch from "./pages/WebcamFaceMatch";
 import FaceSimilarityFinder from "./pages/FaceSimilarityFinder";
 import FaceSimilarityWebcamImage from "./pages/FaceSimilarityWebcamImage";
 import FaceSimilarityUser from "./pages/FaceSimilarityUser";
-import { USER } from "./utils/constants";
 
 function App() {
   return (
