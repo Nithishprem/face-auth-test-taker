@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { USER } from "../utils/constants";
-import { Button } from "@mui/material";
+import { USERS } from "../utils/constants";
+import { Button, TextField } from "@mui/material";
 
 function LoginForm({ number, setNumber, handleNext }) {
   const [error, setError] = useState();
@@ -10,8 +10,11 @@ function LoginForm({ number, setNumber, handleNext }) {
     if (!number) {
       return;
     }
-    if (USER.number === number) handleNext();
-    else {
+    let userFound = USERS.find((user) => user.number === number);
+    console.log("num", userFound);
+    if (userFound) {
+      handleNext(userFound);
+    } else {
       setError(true);
     }
   };
@@ -26,23 +29,23 @@ function LoginForm({ number, setNumber, handleNext }) {
     <section className="bg-gray-50">
       <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
         <a href="#" className="flex items-center mb-6 text-2xl font-semibold text-gray-900">
-          Road Safety
+          Road Safety-NearBuzz
         </a>
         <div className="w-full bg-white rounded-lg shadow md:mt-0 sm:max-w-md xl:p-0">
           <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
-            <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl">
-              Sign in to your account
-            </h1>
+            <h1 className="text-lg font-medium leading-tight tracking-tight text-gray-900">Sign in to your account</h1>
             <form className="space-y-4" onSubmit={handleSubmit}>
               <div>
                 <label className="block mb-2 text-sm font-medium text-gray-900">Enter Mobile Number</label>
-                <input
+                <TextField
                   type="text"
                   value={number}
                   onChange={(e) => setNumber(e.target.value)}
                   placeholder="Mobile number"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 pb-1.5"
-                  required=""
+                  size="small"
+                  fullWidth
+                  // className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 pb-1.5"
+                  required
                 />
               </div>
               <div className="flex items-center justify-between"></div>

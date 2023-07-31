@@ -7,6 +7,7 @@ import WebcamFaceMatch from "./pages/WebcamFaceMatch";
 import FaceSimilarityFinder from "./pages/FaceSimilarityFinder";
 import FaceSimilarityWebcamImage from "./pages/FaceSimilarityWebcamImage";
 import FaceSimilarityUser from "./pages/FaceSimilarityUser";
+import VideoPlayer from "./pages/VideoPlayer";
 
 function App() {
   return (
@@ -42,6 +43,7 @@ function App() {
         <Route path="face-similarity" element={<FaceSimilarityFinder />} />
         <Route path="/face-similarity-webcam-image" element={<FaceSimilarityWebcamImage />} />
         <Route path="face-similarity-user" element={<FaceSimilarityUser />} />
+        <Route path="/video" element={<VideoPlayer />} />
       </Routes>
     </Router>
   );

@@ -7,14 +7,17 @@ import UserContext from "../context/UserContent";
 function LoginPage() {
   const [number, setNumber] = useState("");
 
+  const [userToVerify, setUserToVerify] = useState(null);
+
   const [showFaceDetection, setShowFaceDetection] = useState(false);
 
-  const handleNext = () => {
+  const handleNext = (userFound) => {
+    setUserToVerify(userFound);
     setShowFaceDetection(true);
   };
 
   if (showFaceDetection) {
-    return <FaceDetection number={number} />;
+    return <FaceDetection number={number} userToVerify={userToVerify} />;
   }
   return (
     <div>

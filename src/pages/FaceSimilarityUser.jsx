@@ -15,7 +15,10 @@ function FaceSimilarityUser() {
         // uploadedImageSrc={"https://s3.ap-south-1.amazonaws.com/dev.upstar.io.output-media/face-auth-poc/nithish3.jpeg"}
         // img1Class={"hidden"}
         // img2Class={"hidden"}
-        camClass={""}
+        camClass={{
+          visbility: "hidden",
+          position: "relative",
+        }}
       />
     </div>
   );

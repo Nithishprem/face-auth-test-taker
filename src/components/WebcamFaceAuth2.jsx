@@ -4,18 +4,28 @@ import { Button, CircularProgress } from "@mui/material";
 import * as faceapi from "face-api.js";
 import { Link } from "react-router-dom";
 
-function WebcamFaceAuth2({ uploadedImageSrc, matchDistance, setMatchDistance, camClass, img1Class, img2Class }) {
+function WebcamFaceAuth2({
+  uploadedImageSrc,
+  matchDistance,
+  setMatchDistance,
+  camClass,
+  canvasClass,
+  img1Class,
+  img2Class,
+}) {
   const [modelsLoaded, setModelsLoaded] = useState(false);
   //   const [matchDistance, setMatchDistance] = useState(null);
   const [capturingInterval, setCapturingInterval] = useState(null);
   const [imageSrc, setImageSrc] = useState("");
+
+  // console.log("webcam src", uploadedImageSrc);
 
   const imgRef1 = useRef();
   const imgRef2 = useRef();
   const webcamRef = useRef();
   const canvasRef1 = useRef();
   const canvasRef2 = useRef();
-  const videoPlayerRef = useRef();
+  const canvasRef3 = useRef();
 
   async function compareImages() {
     try {
@@ -68,6 +78,21 @@ function WebcamFaceAuth2({ uploadedImageSrc, matchDistance, setMatchDistance, ca
 
           //   console.log("detection1", detections1);
           //   console.log("detection2", detections2);
+
+          if (canvasRef3.current && detections2) {
+            const canvas3 = canvasRef3.current;
+            const size = {
+              width: img2.width,
+              height: img2.height,
+            };
+            faceapi.matchDimensions(canvas3, size);
+            const resizedDetections = faceapi.resizeResults(detections2, size);
+
+            canvas3.getContext("2d").clearRect(0, 0, canvas3.width, canvas3.height);
+            faceapi.draw.drawDetections(canvas3, resizedDetections);
+            faceapi.draw.drawFaceLandmarks(canvas3, resizedDetections);
+            console.log("resizedDetections", resizedDetections);
+          }
 
           if (detections1 && detections2) {
             // Draw face detection features on canvas
@@ -206,6 +231,7 @@ function WebcamFaceAuth2({ uploadedImageSrc, matchDistance, setMatchDistance, ca
                       }
                 }
               />
+              <canvas ref={canvasRef3} style={canvasClass ? canvasClass : { position: "absolute", top: 0, left: 0 }} />
             </div>
             {/* <Button variant="contained" onClick={handleCompareClick}>
               Start Capturing and Comparing Images

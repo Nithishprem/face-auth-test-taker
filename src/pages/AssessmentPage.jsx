@@ -4,15 +4,18 @@ import { Button, Card, FormControlLabel, FormLabel, Radio, RadioGroup } from "@m
 import UserContext from "../context/UserContent";
 import { Navigate, useNavigate } from "react-router-dom";
 import TopBar from "../components/TopBar";
-import WebCamVigilence from "../components/WebCamVigilence";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import PauseIcon from "@mui/icons-material/Pause";
 import WebcamFaceAuth2 from "../components/WebcamFaceAuth2";
-import { USER } from "../utils/constants";
+import { BEST_MATCH_DISTANCE_VIGILANCE, ROAD_SAFETY_VIDEO } from "../utils/constants";
 
 function AssessmentPage() {
   const { user } = useContext(UserContext);
   const [matchDistance, setMatchDistance] = React.useState(null);
+  const [detectedUser, setDetectedUser] = useState(null);
+  const [lastDetectedTime, setLastDetectedTime] = useState(0);
+  const [detectionStarted, setDetectionStarted] = useState(false);
+  const timerRef = useRef();
 
   const videoRef = useRef();
 
@@ -27,6 +30,25 @@ function AssessmentPage() {
 
   // console.log("user", user);
 
+  useEffect(() => {
+    if (matchDistance && !detectionStarted) {
+      setDetectionStarted(true);
+    }
+
+    if (detectionStarted) {
+      if (matchDistance < BEST_MATCH_DISTANCE_VIGILANCE) {
+        setDetectedUser(user.name);
+      } else {
+        setDetectedUser("unknown");
+      }
+      setLastDetectedTime(0);
+      clearInterval(timerRef.current);
+      timerRef.current = setInterval(() => {
+        setLastDetectedTime((prev) => prev + 1);
+      }, 1000);
+    }
+  }, [matchDistance]);
+
   if (!user?.number) {
     return <Navigate to={"/login"} />;
   }
@@ -40,22 +62,31 @@ function AssessmentPage() {
         <WebcamFaceAuth2
           matchDistance={matchDistance}
           setMatchDistance={setMatchDistance}
-          uploadedImageSrc={USER.img}
+          uploadedImageSrc={user.img}
           img1Class={"hidden"}
           img2Class={"hidden"}
           camClass={{
             visibility: "hidden",
             // position: "relative",
           }}
+          canvasClass={{
+            visibility: "hidden",
+            position: "fixed",
+            top: "-1000px",
+            left: "-1000px",
+          }}
         />
-        <div className="h-6">
-          {matchDistance !== null && (
-            <div className="text-center mt-10">Image similarity distance: {matchDistance}</div>
+        <div className="h-20 pt-10">
+          {detectionStarted && detectedUser && (
+            <>
+              <p className="text-lg text-center">Current user: {detectedUser}</p>
+              <p className="text-base text-center mt-2">Last checked: {lastDetectedTime} seconds ago</p>
+            </>
           )}
         </div>
       </div>
 
-      <div className="w-full max-w-full flex justify-center items-center pt-20 overflow-x-hidden px-4">
+      <div className="w-full max-w-full flex justify-center items-center pt-10 overflow-x-hidden px-4">
         <TestComponent handleResultNavigate={handleResultNavigate} matchDistance={matchDistance} />
       </div>
     </div>
@@ -101,39 +132,39 @@ function TestComponent({ handleResultNavigate, matchDistance }) {
   };
 
   return (
-    <div className="">
-      {/* <Card> */}
-      <div>
-        <p className="mt-4 text-2xl font-medium">Watch the below video and answer the question that follows</p>
+    <div className="max-w-[600px]">
+      <Card>
+        <div className="flex flex-col justify-center items-center p-4">
+          <p className="text-xl font-medium">Watch the below video and answer the question that follows</p>
 
-        {/* {matchDistance && <div className=" my-2 text-start">Match distance: {matchDistance}</div>} */}
+          {/* {matchDistance && <div className=" my-2 text-start">Match distance: {matchDistance}</div>} */}
 
-        <div
-          className="mt-4 w-full max-w-[400px] relative bg-gray-300 aspect-video"
-          onMouseEnter={handleShowIcon}
-          onMouseLeave={handleHideIcon}
-          onMouseMove={handleShowIcon}
-        >
-          <video
-            ref={videoRef}
-            src="http://media.w3.org/2010/05/sintel/trailer.mp4"
-            controls={videoPlayedOnce}
-            onEnded={handleVideoEnded}
-            onLoadedData={handleShowIcon}
-            // autoPlay
-          ></video>
+          <div
+            className="mt-4 w-full max-w-[400px] relative bg-gray-300 aspect-video"
+            onMouseEnter={handleShowIcon}
+            onMouseLeave={handleHideIcon}
+            onMouseMove={handleShowIcon}
+          >
+            <video
+              ref={videoRef}
+              src={ROAD_SAFETY_VIDEO}
+              controls={videoPlayedOnce}
+              onEnded={handleVideoEnded}
+              onLoadedData={handleShowIcon}
+              // autoPlay
+            ></video>
 
-          {!videoPlayedOnce && showIcon && (
-            <div
-              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white cursor-pointer p-2 rounded-full bg-black bg-opacity-30"
-              onClick={handleTogglePlay}
-            >
-              {isPlaying ? <PauseIcon /> : <PlayArrowIcon />}
-            </div>
-          )}
+            {!videoPlayedOnce && showIcon && (
+              <div
+                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white cursor-pointer p-2 rounded-full bg-black bg-opacity-30"
+                onClick={handleTogglePlay}
+              >
+                {isPlaying ? <PauseIcon /> : <PlayArrowIcon />}
+              </div>
+            )}
+          </div>
         </div>
-      </div>
-      {/* </Card> */}
+      </Card>
 
       {videoPlayedOnce && <AssessmentForm handleResultNavigate={handleResultNavigate} />}
     </div>
@@ -234,8 +265,8 @@ const AssessmentForm = ({ handleResultNavigate }) => {
   };
 
   return (
-    <div className=" mt-8">
-      <p className="text-2xl font-medium">Road Safety Quiz</p>
+    <div className=" mt-10">
+      <p className="text-xl font-medium">Road Safety Quiz</p>
 
       <div className="w-full mt-6">
         {questions?.map((question, i) => {
