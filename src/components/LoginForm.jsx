@@ -1,9 +1,23 @@
 import React, { useEffect, useState } from "react";
 import { USERS } from "../utils/constants";
 import { Button, TextField } from "@mui/material";
+import { auth } from "../firebase";
+import { RecaptchaVerifier } from "firebase/auth";
 
 function LoginForm({ number, setNumber, handleNext }) {
-  const [error, setError] = useState();
+  const [error, setError] = useState("");
+
+  const setUpRecaptcha = (number) => {
+    const recapthaVerifier = new RecaptchaVerifier("recaptcha-container", {}, auth);
+    recapthaVerifier.render();
+  };
+
+  const getOtp = (e) => {
+    e.preventDefault();
+    if (number === "" || number === undefined) {
+      return;
+    }
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();

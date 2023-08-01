@@ -5,6 +5,7 @@ import { Card } from "@mui/material";
 
 function ResultPage() {
   const { result } = useContext(UserContext);
+
   return (
     <div className="w-screen h-screen px-4">
       <TopBar />

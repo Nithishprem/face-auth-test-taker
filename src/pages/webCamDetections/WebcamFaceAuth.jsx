@@ -1,9 +1,10 @@
 import * as faceapi from "face-api.js";
 import React, { useEffect } from "react";
-import { BEST_MATCH_DISTANCE, USER } from "../utils/constants";
+import { BEST_MATCH_DISTANCE, USER } from "../../utils/constants";
+import { saveAs } from "file-saver";
 import { Button, CircularProgress } from "@mui/material";
 
-function WebcamFaceMatch() {
+function WebcamFaceAuth({ handleAuthSuccess }) {
   const [modelsLoaded, setModelsLoaded] = React.useState(false);
   const [captureVideo, setCaptureVideo] = React.useState(false);
   const [matchDistance, setMatchDistance] = React.useState(null);
@@ -29,7 +30,7 @@ function WebcamFaceMatch() {
         // faceapi.nets.faceExpressionNet.loadFromUri(MODEL_URL),
       ]).then(() => {
         setModelsLoaded(true);
-        // startVideo();
+        startVideo();
       });
     };
     loadModels();
@@ -85,10 +86,9 @@ function WebcamFaceMatch() {
             const bestMatch = faceMatcher.findBestMatch(userImageDescriptor);
             console.log("match result", bestMatch.toString()); // Perform authentication or display result
             setMatchDistance(bestMatch.distance);
-
-            // if (bestMatch.distance < BEST_MATCH_DISTANCE) {
-            //   takeSnapshot(video);
-            // }
+            if (bestMatch.distance < BEST_MATCH_DISTANCE) {
+              takeSnapshot(video);
+            }
           }
         }
       } catch (error) {
@@ -104,6 +104,12 @@ function WebcamFaceMatch() {
     canvas.getContext("2d").drawImage(video, 0, 0, canvas.width, canvas.height);
     const snapshotDataUrl = canvas.toDataURL("image/png");
     closeWebcam();
+    handleAuthSuccess?.(snapshotDataUrl);
+
+    // canvas.toBlob((blob) => {
+    //   saveAs(blob, "snapshot.png");
+    //   closeWebcam();
+    // });
   };
 
   const closeWebcam = () => {
@@ -115,18 +121,42 @@ function WebcamFaceMatch() {
 
   return (
     <div className="flex flex-col justify-center items-center">
-      {/* {!modelsLoaded && <CircularProgress size="3rem" />} */}
-      <div style={{ textAlign: "center", padding: "10px" }}>
+      {!modelsLoaded && <CircularProgress size="3rem" />}
+      {/* <div style={{ textAlign: "center", padding: "10px" }}>
         {captureVideo && modelsLoaded ? (
-          <Button onClick={closeWebcam} variant="contained">
+          <Button
+            onClick={closeWebcam}
+            variant="contained"
+            // style={{
+            //   cursor: "pointer",
+            //   backgroundColor: "green",
+            //   color: "white",
+            //   padding: "15px",
+            //   fontSize: "25px",
+            //   border: "none",
+            //   borderRadius: "10px",
+            // }}
+          >
             Close Webcam
           </Button>
         ) : (
-          <Button onClick={startVideo} variant="contained">
+          <Button
+            onClick={startVideo}
+            variant="contained"
+            // style={{
+            //   cursor: "pointer",
+            //   backgroundColor: "green",
+            //   color: "white",
+            //   padding: "15px",
+            //   fontSize: "25px",
+            //   border: "none",
+            //   borderRadius: "10px",
+            // }}
+          >
             Open Webcam
           </Button>
         )}
-      </div>
+      </div> */}
       {captureVideo ? (
         modelsLoaded ? (
           <div>
@@ -156,4 +186,4 @@ function WebcamFaceMatch() {
   );
 }
 
-export default WebcamFaceMatch;
+export default WebcamFaceAuth;

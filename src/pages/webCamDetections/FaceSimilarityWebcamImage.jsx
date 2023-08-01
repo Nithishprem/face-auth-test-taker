@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import Webcam from "react-webcam";
 import { Button, CircularProgress } from "@mui/material";
-import { BEST_MATCH_DISTANCE } from "../utils/constants";
+import { BEST_MATCH_DISTANCE } from "../../utils/constants";
 import * as faceapi from "face-api.js";
 import { Link } from "react-router-dom";
 

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { USER } from "../utils/constants";
-import WebcamFaceAuth2 from "../components/WebcamFaceAuth2";
+import { USER } from "../../utils/constants";
+import WebcamFaceAuth2 from "../../components/WebcamFaceAuth2";
 
 function FaceSimilarityUser() {
   const [matchDistance, setMatchDistance] = useState(null);

@@ -4,7 +4,6 @@ import { ReactComponent as LockIcon } from "../assets/browser-lock-icon.svg";
 import UserContext from "../context/UserContent";
 import { BEST_MATCH_DISTANCE } from "../utils/constants";
 import { useNavigate } from "react-router-dom";
-import WebcamFaceAuth from "../pages/WebcamFaceAuth";
 import WebcamFaceAuth2 from "./WebcamFaceAuth2";
 
 function FaceDetection({ number, userToVerify }) {
@@ -123,8 +122,6 @@ function FaceAuthenticate({ number, userToVerify }) {
 
   return (
     <div className="w-screen h-screen flex justify-center items-center">
-      {/* <WebcamFaceAuth handleAuthSuccess={handleAuthSuccess} /> */}
-
       <div className="max-w-[700px] flex flex-col items-center gap-4">
         {/* <p className="flex items-center text-2xl font-semibold text-gray-900">Road Safety-NearBuzz</p> */}
         <p className="text-xl font-medium leading-tight tracking-tight text-gray-900 h-8">

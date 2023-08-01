@@ -29,3 +29,28 @@ export const BEST_MATCH_DISTANCE = 0.45;
 export const BEST_MATCH_DISTANCE_VIGILANCE = 0.5;
 
 export const ROAD_SAFETY_VIDEO = import.meta.env.VITE_VIDEO;
+
+export const VIOLATION_TYPES = [
+  {
+    value: "SINGAL_JUMP",
+    label: "SINGAL_JUMP",
+  },
+  {
+    value: "NO_HELMET",
+    label: "NO_HELMET",
+  },
+  {
+    value: "OVER_SPEED",
+    label: "OVER_SPEED",
+  },
+  {
+    value: "GENERAL",
+    label: "GENERAL",
+  },
+  {
+    value: "OTHERS",
+    label: "OTHERS",
+  },
+];
+
+export const MSG91_AUTH_KEY = import.meta.env.VITE_MSG91_AUTH_KEY;

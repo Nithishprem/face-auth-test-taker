@@ -3,13 +3,14 @@ import LoginPage from "./pages/LoginPage";
 import ProtectedRouter from "./components/ProtectedRouter";
 import AssessmentPage from "./pages/AssessmentPage";
 import ResultPage from "./pages/ResultPage";
-import WebcamFaceMatch from "./pages/WebcamFaceMatch";
-import FaceSimilarityFinder from "./pages/FaceSimilarityFinder";
-import FaceSimilarityWebcamImage from "./pages/FaceSimilarityWebcamImage";
-import FaceSimilarityUser from "./pages/FaceSimilarityUser";
-import VideoPlayer from "./pages/VideoPlayer";
+import WebCamDetectionRoutes from "./routes/WebCamDetectionRoutes";
+import AdminRoutes from "./routes/AdminRoutes";
+// import firebase from "firebase";
 
 function App() {
+  // const firebaseApp = firebase.apps[0];
+
+  // console.log(JSON.stringify(firebaseApp.options));
   return (
     <Router>
       <Routes>
@@ -31,19 +32,8 @@ function App() {
             </ProtectedRouter>
           }
         />{" "}
-        {/* <Route
-          path="/webcam-page"
-          element={
-            // <ProtectedRouter>
-            <WebcamPage />
-            // </ProtectedRouter>
-          }
-        />{" "} */}
-        <Route path="/webcam-facematch" element={<WebcamFaceMatch />} />
-        <Route path="face-similarity" element={<FaceSimilarityFinder />} />
-        <Route path="/face-similarity-webcam-image" element={<FaceSimilarityWebcamImage />} />
-        <Route path="face-similarity-user" element={<FaceSimilarityUser />} />
-        <Route path="/video" element={<VideoPlayer />} />
+        <Route path="/admin/*" element={<AdminRoutes />} />
+        <Route path="/webcam/*" element={<WebCamDetectionRoutes />} />
       </Routes>
     </Router>
   );

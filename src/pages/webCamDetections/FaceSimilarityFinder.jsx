@@ -1,6 +1,6 @@
 import React, { useState, useRef } from "react";
 import { Button, CircularProgress } from "@mui/material";
-import { BEST_MATCH_DISTANCE } from "../utils/constants";
+import { BEST_MATCH_DISTANCE } from "../../utils/constants";
 import * as faceapi from "face-api.js";
 
 function FaceSimilarityFinder() {
