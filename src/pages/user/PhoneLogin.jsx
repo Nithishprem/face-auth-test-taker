@@ -1,6 +1,6 @@
 import { useState } from "react";
-import PhoneLoginForm from "../../components/admin/PhoneLoginForm";
-import PhoneLoginOTP from "../../components/admin/PhoneLoginOTP";
+import PhoneLoginForm from "../../components/user/PhoneLoginForm";
+import PhoneLoginOTP from "../../components/user/PhoneLoginOTP";
 
 function PhoneLogin() {
   const [number, setNumber] = useState("");

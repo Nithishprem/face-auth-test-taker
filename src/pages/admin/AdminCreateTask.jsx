@@ -53,8 +53,8 @@ function AdminCreateTask() {
       setSubmitting(false);
     } catch (error) {
       console.log("error", error);
-      if (error.response.data.message && typeof error.response.data.message === "string") {
-        setSubmitError(error.response.data.message);
+      if (error.message && typeof error.message === "string") {
+        setSubmitError(error.message);
       } else if (error.message) {
         setSubmitError(error.message);
       } else {

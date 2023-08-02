@@ -54,3 +54,16 @@ export const VIOLATION_TYPES = [
 ];
 
 export const MSG91_AUTH_KEY = import.meta.env.VITE_MSG91_AUTH_KEY;
+
+export const ROUTES = {
+  admin: {
+    login: "/admin/phone-login",
+    listTasks: "/admin/listTasks",
+    createTask: "/admin/createTask",
+  },
+  user: {
+    login: "/user/phone-login",
+    assessment: "/user/assessment/:id",
+    taskNotFound: "/user/taskNotFound",
+  },
+};

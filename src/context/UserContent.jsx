@@ -7,6 +7,7 @@ export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [result, setResult] = useState(null);
+  const [destination, setDestination] = useState(null);
 
   const handleLogin = (user) => {
     setUser(user);
@@ -16,6 +17,14 @@ export const UserProvider = ({ children }) => {
   const handleLogout = () => {
     setResult(null);
     setUser(null);
+  };
+
+  const handleDestinationSave = (route) => {
+    setDestination(route);
+  };
+
+  const handleDestinationClear = () => {
+    setDestination(null);
   };
 
   const handleResultSave = (result) => {
@@ -33,6 +42,9 @@ export const UserProvider = ({ children }) => {
         handleLogin,
         handleLogout,
         isLoading,
+        handleDestinationSave,
+        handleDestinationClear,
+        destination,
         handleResultSave,
         handleResultClear,
         result,

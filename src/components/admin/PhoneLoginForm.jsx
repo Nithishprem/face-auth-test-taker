@@ -1,10 +1,10 @@
 import { Button, TextField } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { auth } from "../firebase";
+import { auth } from "../../firebase";
 import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
-import { postUserExists } from "../services/services";
+import { postUserExists } from "../../services/services";
 
 function PhoneLoginForm({ number, setNumber, handleNext }) {
   const [error, setError] = useState("");

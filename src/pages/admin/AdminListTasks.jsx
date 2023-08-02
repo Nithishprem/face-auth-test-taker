@@ -3,6 +3,9 @@ import Box from "@mui/material/Box";
 import { DataGrid } from "@mui/x-data-grid";
 import { Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { getAwarenessTasks } from "../../services/services";
+import CircularProgress from "@mui/material/CircularProgress";
 
 const columns = [
   { field: "id", headerName: "ID", width: 90 },
@@ -47,10 +50,69 @@ const rows = [
 
 function AdminListTasks() {
   const navigate = useNavigate();
+
+  const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState("");
+  const [rows, setRows] = useState([]);
+
+  const fetchAllTasks = async () => {
+    try {
+      setLoading(true);
+      const res = await getAwarenessTasks();
+      console.log("res", res?.data);
+
+      const data = res?.data?.map((task) => {
+        return {
+          id: task.id,
+          violatorName: task.violatorName,
+          violationType: task.violationType,
+          phoneNumber: task.phoneNumber,
+          status: task.status,
+        };
+      });
+
+      setRows(data);
+      setLoading(false);
+    } catch (error) {
+      console.log("error", error.message);
+      if (error.message) {
+        setLoadError(error.message);
+      } else {
+        setLoadError("error loading the data");
+      }
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchAllTasks();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="w-full mb-20">
+        <TopBar />
+        <div className="max-w-full flex flex-col min-h-[50vh] items-center justify-center pt-20 mx-10">
+          <CircularProgress size="3rem" />
+        </div>
+      </div>
+    );
+  }
+
+  if (loadError) {
+    return (
+      <div className="w-full mb-20">
+        <TopBar />
+        <div className="max-w-full flex flex-col min-h-[50vh] items-center justify-center pt-20 mx-10">
+          <p className="text-red-500 text-base ">{loadError}</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="w-full mb-20">
       <TopBar />
-
       <div className="max-w-full flex flex-col items-center justify-start pt-20 mx-10">
         <div className="w-full flex justify-end items-center py-4">
           <Button

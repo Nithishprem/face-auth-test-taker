@@ -103,13 +103,14 @@ function FaceAuthenticate({ number, userToVerify }) {
   const handleAuthenticationFailed = () => {};
 
   useEffect(() => {
+    let timeoutId;
     if (matchDistance && !detectionSuccess) {
       setLoading(false);
       setDetectionCount((prev) => prev + 1);
       if (matchDistance < BEST_MATCH_DISTANCE) {
         setDetectionSuccess(true);
         // handleAuthSuccess();
-        const timeoutId = setTimeout(() => {
+        timeoutId = setTimeout(() => {
           handleAuthSuccess();
         }, 5000);
       }

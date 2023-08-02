@@ -1,25 +1,23 @@
 import { Button, TextField } from "@mui/material";
 import React, { useContext, useEffect, useState } from "react";
-import { getUser, loginUser, userLoginRegister } from "../services/services";
+import { getUser, loginUser, userLoginRegister } from "../../services/services";
 import { useNavigate } from "react-router-dom";
-import UserContext from "../context/UserContent";
+import UserContext from "../../context/UserContent";
 import { LoadingButton } from "@mui/lab";
+import { ROUTES } from "../../utils/constants";
 
 function PhoneLoginOTP({ verificationDetails, number }) {
   const [error, setError] = useState("");
   const [code, setCode] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const navigate = useNavigate();
-  const { handleLogin } = useContext(UserContext);
+  const { handleLogin, destination } = useContext(UserContext);
 
   const handleVerifyOtp = async (e) => {
     try {
       e.preventDefault();
       setSubmitting(true);
       const res = await verificationDetails.confirm(code);
-
-      // console.log("res", res.user);
-      // console.log("token", res._tokenResponse);
       await handleSignIn(res);
     } catch (error) {
       console.log("error", error.message);
@@ -31,7 +29,6 @@ function PhoneLoginOTP({ verificationDetails, number }) {
     try {
       const body = {
         // phoneNumber: number,
-        // isAdmin: true,
       };
 
       // console.log("response", optRes?._tokenResponse?.idToken);
@@ -51,9 +48,16 @@ function PhoneLoginOTP({ verificationDetails, number }) {
       const user = profileRes?.data;
 
       handleLogin(user);
-      navigate("/admin/listTasks");
+
+      if (destination) {
+        navigate(destination);
+      } else {
+        navigate(ROUTES.user.taskNotFound);
+      }
+
+      console.log("login success!");
     } catch (error) {
-      console.log("error", JSON.stringify(error));
+      // console.log("error", JSON.stringify(error));
       setError(error.message);
       setSubmitting(false);
     }

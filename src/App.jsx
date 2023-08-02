@@ -5,16 +5,13 @@ import AssessmentPage from "./pages/AssessmentPage";
 import ResultPage from "./pages/ResultPage";
 import WebCamDetectionRoutes from "./routes/WebCamDetectionRoutes";
 import AdminRoutes from "./routes/AdminRoutes";
-// import firebase from "firebase";
+import UserRoutes from "./routes/UserRoutes";
 
 function App() {
-  // const firebaseApp = firebase.apps[0];
-
-  // console.log(JSON.stringify(firebaseApp.options));
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Navigate to={"/login"} />} />
+        <Route path="/" element={<Navigate to={"/user/login"} />} />
         <Route path="/login" element={<LoginPage />} />
         <Route
           path="/assessment"
@@ -32,6 +29,7 @@ function App() {
             </ProtectedRouter>
           }
         />{" "}
+        <Route path="/user/*" element={<UserRoutes />} />
         <Route path="/admin/*" element={<AdminRoutes />} />
         <Route path="/webcam/*" element={<WebCamDetectionRoutes />} />
       </Routes>

@@ -5,3 +5,4 @@ export const AUTH_TOKEN = `${DOMAIN_NAME}/auth/token`;
 export const AWARENESS_TASKS = `${DOMAIN_NAME}/awareness/tasks`;
 export const GET_USER_PROFILE = `${DOMAIN_NAME}/users/me`;
 export const CHECK_USER_EXISTS = `${DOMAIN_NAME}/users/exists`;
+export const AWARENESS_TASKS_BY_ID = `${DOMAIN_NAME}/awareness/tasks/##id##`;
