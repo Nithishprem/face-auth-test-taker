@@ -62,12 +62,12 @@ function UserAssessment({ setTaskStep, taskData, setTaskData, imgToCompare }) {
 
   useEffect(() => {
     let totalTimer;
-    if (detectionStarted) {
-      totalTimer = setInterval(() => {
-        setTotalTime((prev) => prev + 1000);
-      }, 1000);
-      totalTimerRef.current = totalTimer;
-    }
+    // if (detectionStarted) {
+    totalTimer = setInterval(() => {
+      setTotalTime((prev) => prev + 1000);
+    }, 1000);
+    totalTimerRef.current = totalTimer;
+    // }
 
     return () => {
       clearInterval(totalTimer);
@@ -267,11 +267,20 @@ const AssessmentForm = ({ handleResultNavigate, questionsData, taskData, setTask
         }
       });
 
+      let totalDuration = trackingResult?.total;
+      let trackedDuration = trackingResult?.tracked;
+
+      if (trackedDuration > totalDuration) trackedDuration = totalDuration;
+      if (trackedDuration < 15) trackedDuration = 15;
+
       let result = { correct, attempted, total: questions?.length };
       const body = {
         completionDetails: result,
         status: TASK_STATUS.completed,
-        trackingDetails: trackingResult,
+        trackingDetails: {
+          total: totalDuration,
+          tracked: trackedDuration,
+        },
       };
 
       const res = await updateAwarenessTaskById(body, taskData?.id);
