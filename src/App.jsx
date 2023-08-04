@@ -6,32 +6,18 @@ import ResultPage from "./pages/ResultPage";
 import WebCamDetectionRoutes from "./routes/WebCamDetectionRoutes";
 import AdminRoutes from "./routes/AdminRoutes";
 import UserRoutes from "./routes/UserRoutes";
+import NotFound from "./pages/NotFound";
 
 function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Navigate to={"/user/login"} />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route
-          path="/assessment"
-          element={
-            <ProtectedRouter>
-              <AssessmentPage />
-            </ProtectedRouter>
-          }
-        />
-        <Route
-          path="/result"
-          element={
-            <ProtectedRouter>
-              <ResultPage />
-            </ProtectedRouter>
-          }
-        />{" "}
+        <Route path="/" element={<Navigate to={"/user/phone-login"} />} />
+
         <Route path="/user/*" element={<UserRoutes />} />
         <Route path="/admin/*" element={<AdminRoutes />} />
         <Route path="/webcam/*" element={<WebCamDetectionRoutes />} />
+        <Route path="/*" element={<NotFound />} />
       </Routes>
     </Router>
   );

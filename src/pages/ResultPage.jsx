@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import UserContext from "../context/UserContent";
-import TopBar from "../components/TopBar";
+import TopBar from "../components/user/TopBar";
 import { Card } from "@mui/material";
 
 function ResultPage() {

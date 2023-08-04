@@ -1,44 +1,97 @@
 import { Button, TextField } from "@mui/material";
 import React, { useContext, useEffect, useState } from "react";
-import { getUser, loginUser, userLoginRegister } from "../../services/services";
+import { getUser, loginUser, otpAuth, userLoginRegister } from "../../services/services";
 import { useNavigate } from "react-router-dom";
 import UserContext from "../../context/UserContent";
 import { LoadingButton } from "@mui/lab";
 import { ROUTES } from "../../utils/constants";
+import * as faceapi from "face-api.js";
 
 function PhoneLoginOTP({ verificationDetails, number }) {
   const [error, setError] = useState("");
   const [code, setCode] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const navigate = useNavigate();
-  const { handleLogin, destination } = useContext(UserContext);
+  const { handleLogin, destination, storeUserProfileImage } = useContext(UserContext);
 
-  const handleVerifyOtp = async (e) => {
+  // const handleVerifyOtp = async (e) => {
+  //   try {
+  //     e.preventDefault();
+  //     setSubmitting(true);
+  //     const res = await verificationDetails.confirm(code);
+  //     await handleSignIn(res);
+  //   } catch (error) {
+  //     console.log("error", error.message);
+  //     setError(error.message);
+  //   }
+  // };
+
+  // const handleSignIn = async (optRes) => {
+  //   try {
+  //     const body = {
+  //       // phoneNumber: number,
+  //     };
+
+  //     // console.log("response", optRes?._tokenResponse?.idToken);
+  //     const idToken = optRes?._tokenResponse?.idToken;
+
+  //     // console.log("idToken", idToken, JSON.stringify(idToken));
+  //     const res = await loginUser(body, idToken);
+  //     // console.log("signInRes", res);
+
+  //     let data = res?.data;
+
+  //     localStorage.setItem("accessToken", data.accessToken);
+  //     localStorage.setItem("refreshToken", data.refreshToken);
+
+  //     const profileRes = await getUser();
+
+  //     const user = profileRes?.data;
+
+  //     if (user?.photo) {
+  //       const image = await faceapi.fetchImage(user?.photo);
+  //       storeUserProfileImage(image?.src);
+  //     }
+
+  //     console.log("userLogin", user);
+
+  //     await handleLogin(user);
+
+  //     if (destination) {
+  //       navigate(destination);
+  //     } else {
+  //       navigate(ROUTES.user.taskNotFound);
+  //     }
+
+  //     console.log("login success!");
+  //   } catch (error) {
+  //     // console.log("error", JSON.stringify(error));
+  //     setError(error.message);
+  //     setSubmitting(false);
+  //   }
+  // };
+
+  const fetchuserPhoto = async (user) => {
     try {
-      e.preventDefault();
-      setSubmitting(true);
-      const res = await verificationDetails.confirm(code);
-      await handleSignIn(res);
+      if (user?.photo) {
+        const image = await faceapi.fetchImage(user?.photo);
+        storeUserProfileImage(image?.src);
+      }
     } catch (error) {
-      console.log("error", error.message);
-      setError(error.message);
+      console.log(error);
     }
   };
 
-  const handleSignIn = async (optRes) => {
+  const handleVerifyOtp = async (e) => {
+    e.preventDefault();
     try {
       const body = {
-        // phoneNumber: number,
+        authType: "phone_number",
+        authUser: number,
+        authPass: code,
       };
-
-      // console.log("response", optRes?._tokenResponse?.idToken);
-      const idToken = optRes?._tokenResponse?.idToken;
-
-      // console.log("idToken", idToken, JSON.stringify(idToken));
-      const res = await loginUser(body, idToken);
-      // console.log("signInRes", res);
-
-      let data = res?.data;
+      const res = await otpAuth(body);
+      const data = res?.data;
 
       localStorage.setItem("accessToken", data.accessToken);
       localStorage.setItem("refreshToken", data.refreshToken);
@@ -47,7 +100,11 @@ function PhoneLoginOTP({ verificationDetails, number }) {
 
       const user = profileRes?.data;
 
-      handleLogin(user);
+      await fetchuserPhoto(user);
+
+      console.log("userLogin", user);
+
+      await handleLogin(user);
 
       if (destination) {
         navigate(destination);
@@ -57,9 +114,12 @@ function PhoneLoginOTP({ verificationDetails, number }) {
 
       console.log("login success!");
     } catch (error) {
-      // console.log("error", JSON.stringify(error));
-      setError(error.message);
-      setSubmitting(false);
+      console.log("error", error);
+      if (error?.message) {
+        setError(error?.message);
+      } else {
+        setError("Error submitting the request");
+      }
     }
   };
 
@@ -73,7 +133,7 @@ function PhoneLoginOTP({ verificationDetails, number }) {
     <section className="bg-gray-50">
       <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
         <a href="#" className="flex items-center mb-6 text-2xl font-semibold text-gray-900">
-          Road Safety-NearBuzz
+          Road Safety Awareness - NearBuzz
         </a>
         <div className="w-full bg-white rounded-lg shadow md:mt-0 sm:max-w-md xl:p-0">
           <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
@@ -88,7 +148,6 @@ function PhoneLoginOTP({ verificationDetails, number }) {
                   placeholder="Enter 6 digit code"
                   size="small"
                   fullWidth
-                  // className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 pb-1.5"
                   required
                 />
               </div>
@@ -102,7 +161,6 @@ function PhoneLoginOTP({ verificationDetails, number }) {
                 fullWidth
                 type="submit"
                 loading={submitting}
-                // className="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
                 disabled={!code || code.length !== 6}
               >
                 <span>Continue</span>

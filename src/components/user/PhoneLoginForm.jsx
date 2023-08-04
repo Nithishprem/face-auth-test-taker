@@ -2,57 +2,80 @@ import { Button, TextField } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { auth } from "../../firebase";
 import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
-import PhoneInput from "react-phone-input-2";
-import "react-phone-input-2/lib/style.css";
-import { postUserExists } from "../../services/services";
+// import PhoneInput from "react-phone-input-2";
+// import "react-phone-input-2/lib/style.css";
+import { postUserExists, sendOtp } from "../../services/services";
+import { MuiTelInput } from "mui-tel-input";
 
 function PhoneLoginForm({ number, setNumber, handleNext }) {
   const [error, setError] = useState("");
 
-  const setUpRecaptcha = async (number) => {
-    try {
-      const recapthaVerifier = new RecaptchaVerifier(auth, "recaptcha-container", {});
-      recapthaVerifier.render();
-      const confirmationResult = await signInWithPhoneNumber(auth, number, recapthaVerifier);
-      console.log("confirmationResult", confirmationResult);
-      return confirmationResult;
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  // const setUpRecaptcha = async (number) => {
+  //   try {
+  //     const recapthaVerifier = new RecaptchaVerifier(auth, "recaptcha-container", {});
+  //     recapthaVerifier.render();
+  //     const confirmationResult = await signInWithPhoneNumber(auth, number, recapthaVerifier);
+  //     console.log("confirmationResult", confirmationResult);
+  //     return confirmationResult;
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
-  const checkUserExists = async (e) => {
+  // const checkUserExists = async (e) => {
+  //   e.preventDefault();
+  //   try {
+  //     const res = await postUserExists(number);
+
+  //     console.log("user exists", res?.data);
+  //     if (res?.data) {
+  //       await sendOtp();
+  //     } else {
+  //       throw new Error("User doesn't exist");
+  //     }
+  //   } catch (error) {
+  //     console.log("error", error.message);
+  //     if (error.message) {
+  //       setError(error.message);
+  //     } else {
+  //       setError("Error submiting the request");
+  //     }
+  //   }
+  // };
+
+  // const sendOtp = async () => {
+  //   if (number === "" || number === undefined) {
+  //     return;
+  //   }
+  //   try {
+  //     const response = await setUpRecaptcha(number);
+  //     handleNext(response);
+  //   } catch (error) {
+  //     console.log(error);
+  //     //   setError(error.message);
+  //   }
+  // };
+
+  const handleSendOtp = async (e) => {
     e.preventDefault();
     try {
-      const res = await postUserExists("+" + number);
-
-      console.log("user exists", res?.data);
-      if (res?.data) {
-        await sendOtp();
-      } else {
-        throw new Error("User doesn't exist");
-      }
+      const res = await sendOtp(number);
+      handleNext();
     } catch (error) {
-      console.log("error", error.message);
+      console.log("error", error);
       if (error.message) {
         setError(error.message);
       } else {
-        setError("Error submiting the request");
+        setError("Error submitting the request");
       }
     }
   };
 
-  const sendOtp = async () => {
-    if (number === "" || number === undefined) {
-      return;
-    }
-    try {
-      const response = await setUpRecaptcha("+" + number);
-      handleNext(response);
-    } catch (error) {
-      console.log(error);
-      //   setError(error.message);
-    }
+  const handlePhoneInput = (number, info) => {
+    console.log("info", info);
+    setNumber((prev) => {
+      return info.numberValue;
+    });
   };
 
   useEffect(() => {
@@ -65,12 +88,12 @@ function PhoneLoginForm({ number, setNumber, handleNext }) {
     <section className="bg-gray-50">
       <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
         <a href="#" className="flex items-center mb-6 text-2xl font-semibold text-gray-900">
-          Road Safety-NearBuzz
+          Road Safety Awareness - NearBuzz
         </a>
         <div className="w-full bg-white rounded-lg shadow md:mt-0 sm:max-w-md xl:p-0">
           <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
             <h1 className="text-lg font-medium leading-tight tracking-tight text-gray-900">Login</h1>
-            <form className="space-y-4" onSubmit={checkUserExists}>
+            <form className="space-y-4" onSubmit={handleSendOtp}>
               <div>
                 <label className="block mb-2 text-sm font-medium text-gray-900">Enter Mobile Number</label>
                 {/* <TextField
@@ -83,7 +106,7 @@ function PhoneLoginForm({ number, setNumber, handleNext }) {
                   // className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 pb-1.5"
                   required
                 /> */}
-                <PhoneInput
+                {/* <PhoneInput
                   defaultCountry="in"
                   country={"in"}
                   onlyCountries={["in"]}
@@ -93,6 +116,17 @@ function PhoneLoginForm({ number, setNumber, handleNext }) {
                   inputStyle={{
                     containerClass: "100%",
                   }}
+                /> */}
+
+                <MuiTelInput
+                  onChange={handlePhoneInput}
+                  value={number}
+                  forceCallingCode
+                  onlyCountries={["IN"]}
+                  defaultCountry="IN"
+                  fullWidth
+                  size="small"
+                  placeholder="Enter Phone Number"
                 />
               </div>
               <div className="flex items-center justify-between">

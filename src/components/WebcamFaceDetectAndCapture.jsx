@@ -3,81 +3,167 @@ import Webcam from "react-webcam";
 import { Button, CircularProgress } from "@mui/material";
 import * as faceapi from "face-api.js";
 
-function WebcamFaceAuth2({
-  uploadedImageSrc,
-  matchDistance,
+function WebcamFaceDetectAndCapture({
+  imgWithScore,
   setImgWithScore,
   setMatchDistance,
   camClass,
   canvasClass,
-  img1Class,
   img2Class,
 }) {
   const [modelsLoaded, setModelsLoaded] = useState(false);
   //   const [matchDistance, setMatchDistance] = useState(null);
   const [capturingInterval, setCapturingInterval] = useState(null);
-  const [imageSrc, setImageSrc] = useState("");
+  //   const [imageSrc, setImageSrc] = useState("");
 
   // console.log("webcam src", uploadedImageSrc);
 
-  const imgRef1 = useRef();
+  //   const imgRef1 = useRef();
   const imgRef2 = useRef();
   const webcamRef = useRef();
-  const canvasRef1 = useRef();
+  //   const canvasRef1 = useRef();
   const canvasRef2 = useRef();
   const canvasRef3 = useRef();
 
-  async function compareImages() {
+  //   async function compareImages() {
+  //     try {
+  //       //   console.log("models loaded", modelsLoaded);
+  //       if (modelsLoaded && imgRef1.current && imgRef2.current) {
+  //         const img1 = imgRef1.current;
+  //         const img2 = imgRef2.current;
+
+  //         // Create new image elements to ensure images are loaded
+  //         const newImg1 = new Image();
+  //         const newImg2 = new Image();
+
+  //         // Set the image source to the dataURL of the uploaded images
+  //         newImg1.src = img1.src;
+  //         newImg2.src = img2.src;
+
+  //         // Wait for the images to load
+  //         // await Promise.all([newImg1.onload, newImg2.onload]);
+
+  //         const [img1Loaded, img2Loaded] = await Promise.all([
+  //           new Promise((resolve) => {
+  //             newImg1.onload = () => resolve(true);
+  //             newImg1.src = img1.src;
+  //           }),
+  //           new Promise((resolve) => {
+  //             newImg2.onload = () => resolve(true);
+  //             newImg2.src = img2.src;
+  //           }),
+  //         ]);
+
+  //         if (img1Loaded && img2Loaded) {
+  //           const canvas1 = canvasRef1.current;
+  //           const canvas2 = canvasRef2.current;
+  //           const ctx1 = canvas1.getContext("2d");
+  //           const ctx2 = canvas2.getContext("2d");
+
+  //           // Set canvas dimensions
+  //           canvas1.width = img1.width;
+  //           canvas1.height = img1.height;
+  //           canvas2.width = img2.width;
+  //           canvas2.height = img2.height;
+
+  //           // Draw the images on the canvas
+  //           ctx1.drawImage(newImg1, 0, 0, img1.width, img1.height);
+  //           ctx2.drawImage(newImg2, 0, 0, img2.width, img2.height);
+
+  //           // Detect faces in the images
+  //           const detections1 = await faceapi.detectSingleFace(canvas1).withFaceLandmarks().withFaceDescriptor();
+  //           const detections2 = await faceapi.detectSingleFace(canvas2).withFaceLandmarks().withFaceDescriptor();
+
+  //           //   console.log("detection1", detections1);
+  //           //   console.log("detection2", detections2);
+
+  //           if (canvasRef3.current && detections2) {
+  //             const canvas3 = canvasRef3.current;
+  //             const size = {
+  //               width: img2.width,
+  //               height: img2.height,
+  //             };
+  //             faceapi.matchDimensions(canvas3, size);
+  //             const resizedDetections = faceapi.resizeResults(detections2, size);
+
+  //             canvas3.getContext("2d").clearRect(0, 0, canvas3.width, canvas3.height);
+  //             faceapi.draw.drawDetections(canvas3, resizedDetections);
+  //             faceapi.draw.drawFaceLandmarks(canvas3, resizedDetections);
+  //             console.log("resizedDetections", resizedDetections);
+  //           }
+
+  //           if (detections1 && detections2) {
+  //             // Draw face detection features on canvas
+  //             faceapi.draw.drawDetections(canvas1, detections1);
+  //             faceapi.draw.drawFaceLandmarks(canvas1, detections1);
+
+  //             faceapi.draw.drawDetections(canvas2, detections2);
+  //             faceapi.draw.drawFaceLandmarks(canvas2, detections2);
+
+  //             // Get face descriptors
+  //             const descriptors1 = [detections1.descriptor];
+  //             const descriptors2 = [detections2.descriptor];
+
+  //             // console.log("Descriptors1:", JSON.stringify(descriptors1));
+  //             // console.log("Descriptors2:", JSON.stringify(descriptors2));
+
+  //             // Compare face descriptors
+  //             const distance = faceapi.euclideanDistance(descriptors1[0], descriptors2[0]);
+  //             console.log("Image similarity distance:", distance);
+
+  //             setMatchDistance(distance);
+  //           } else {
+  //             console.log("Could not detect face(s) in the image(s).");
+  //             setMatchDistance(null);
+  //           }
+  //         }
+
+  //         // Get the canvas context
+  //       }
+  //     } catch (error) {
+  //       console.log("Error:", error.message);
+  //     }
+  //   }
+
+  async function detectFaceFromImage() {
     try {
       //   console.log("models loaded", modelsLoaded);
-      if (modelsLoaded && imgRef1.current && imgRef2.current) {
-        const img1 = imgRef1.current;
+      if (modelsLoaded && imgRef2.current) {
         const img2 = imgRef2.current;
 
         // Create new image elements to ensure images are loaded
-        const newImg1 = new Image();
         const newImg2 = new Image();
 
         // Set the image source to the dataURL of the uploaded images
-        newImg1.src = img1.src;
         newImg2.src = img2.src;
 
         // Wait for the images to load
         // await Promise.all([newImg1.onload, newImg2.onload]);
 
-        const [img1Loaded, img2Loaded] = await Promise.all([
-          new Promise((resolve) => {
-            newImg1.onload = () => resolve(true);
-            newImg1.src = img1.src;
-          }),
+        const [img2Loaded] = await Promise.all([
           new Promise((resolve) => {
             newImg2.onload = () => resolve(true);
             newImg2.src = img2.src;
           }),
         ]);
 
-        if (img1Loaded && img2Loaded) {
-          const canvas1 = canvasRef1.current;
+        if (img2Loaded) {
           const canvas2 = canvasRef2.current;
-          const ctx1 = canvas1.getContext("2d");
           const ctx2 = canvas2.getContext("2d");
 
           // Set canvas dimensions
-          canvas1.width = img1.width;
-          canvas1.height = img1.height;
           canvas2.width = img2.width;
           canvas2.height = img2.height;
 
           // Draw the images on the canvas
-          ctx1.drawImage(newImg1, 0, 0, img1.width, img1.height);
           ctx2.drawImage(newImg2, 0, 0, img2.width, img2.height);
 
           // Detect faces in the images
-          const detections1 = await faceapi.detectSingleFace(canvas1).withFaceLandmarks().withFaceDescriptor();
           const detections2 = await faceapi.detectSingleFace(canvas2).withFaceLandmarks().withFaceDescriptor();
 
-          console.log("detection1 score", detections1?._score);
-          console.log("detection2 score", detections2?._score);
+          //   console.log("detection1", detections1);
+          //   console.log("detection2", detections2);
+          //   console.log("detection1 score", detections2?.detection?._score);
 
           if (canvasRef3.current && detections2) {
             const canvas3 = canvasRef3.current;
@@ -94,33 +180,25 @@ function WebcamFaceAuth2({
             console.log("resizedDetections", resizedDetections);
           }
 
-          if (detections1 && detections2) {
+          if (detections2) {
             // Draw face detection features on canvas
-            faceapi.draw.drawDetections(canvas1, detections1);
-            faceapi.draw.drawFaceLandmarks(canvas1, detections1);
 
             faceapi.draw.drawDetections(canvas2, detections2);
             faceapi.draw.drawFaceLandmarks(canvas2, detections2);
 
             // Get face descriptors
-            const descriptors1 = [detections1.descriptor];
-            const descriptors2 = [detections2.descriptor];
-
-            // console.log("Descriptors1:", JSON.stringify(descriptors1));
-            // console.log("Descriptors2:", JSON.stringify(descriptors2));
-
-            // Compare face descriptors
-            const distance = faceapi.euclideanDistance(descriptors1[0], descriptors2[0]);
-            console.log("Image similarity distance:", distance);
-
-            setMatchDistance?.(distance);
-            setImgWithScore?.({
+            // const descriptors2 = [detections2.descriptor];
+            let data = {
               image: img2.src,
               score: detections2?.detection?._score,
-            });
+            };
+
+            setImgWithScore(data);
+
+            // console.log("Descriptors2:", JSON.stringify(descriptors2));
           } else {
             console.log("Could not detect face(s) in the image(s).");
-            setMatchDistance(null);
+            // setMatchDistance(null);
           }
         }
 
@@ -141,8 +219,8 @@ function WebcamFaceAuth2({
           imgRef2.current.src = webcamImage;
           //   imgRef1.current.src = imageSrc;
 
-          // Compare the captured image with the uploaded image
-          compareImages();
+          // detect face from captured image
+          detectFaceFromImage();
         }
       }
     } catch (error) {
@@ -183,9 +261,9 @@ function WebcamFaceAuth2({
   }, []);
 
   // Use the uploadedImageSrc prop as the source for the first image
-  useEffect(() => {
-    setImageSrc(uploadedImageSrc);
-  }, [uploadedImageSrc]);
+  //   useEffect(() => {
+  //     setImageSrc(uploadedImageSrc);
+  //   }, [uploadedImageSrc]);
 
   useEffect(() => {
     if (modelsLoaded) {
@@ -237,14 +315,10 @@ function WebcamFaceAuth2({
               />
               <canvas ref={canvasRef3} style={canvasClass ? canvasClass : { position: "absolute", top: 0, left: 0 }} />
             </div>
-            {/* <Button variant="contained" onClick={handleCompareClick}>
-              Start Capturing and Comparing Images
-            </Button> */}
           </div>
 
-          <div className="flex justify-center gap-4">
-            <div>
-              {/* <input type="file" accept="image/*" onChange={(e) => handleImageUpload(e, imgRef1)} /> */}
+          <div className="flex justify-center gap-4 mt-10">
+            {/* <div>
               <div style={{ position: "relative" }} className={`${img1Class}`}>
                 <img
                   ref={imgRef1}
@@ -257,7 +331,7 @@ function WebcamFaceAuth2({
                   style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%" }}
                 />
               </div>
-            </div>
+            </div> */}
 
             <div>
               <div style={{ position: "relative" }} className={`${img2Class}`}>
@@ -274,20 +348,10 @@ function WebcamFaceAuth2({
               </div>
             </div>
           </div>
-
-          {/* <div className="h-6">
-            {matchDistance !== null && <div className="text-center">Image similarity distance: {matchDistance}</div>}
-          </div> */}
-
-          {/* <Button>
-            <Link className="mt-10" to={"/webcam-facematch"}>
-              Face matcher
-            </Link>
-          </Button> */}
         </div>
       )}
     </div>
   );
 }
 
-export default WebcamFaceAuth2;
+export default WebcamFaceDetectAndCapture;

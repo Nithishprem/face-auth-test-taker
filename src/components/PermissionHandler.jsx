@@ -36,7 +36,7 @@ function PermissionHandler({ setVideoDevices, handlePermissionsLoaded }) {
 
   if (permissionDenied) {
     return (
-      <div className="w-screen h-screen p-4 flex justify-between items-center bg-gray-50">
+      <div className="w-[80vw] h-[70vw] p-4 flex justify-between items-center bg-gray-50">
         <div className="w-full max-w-500px bg-white rounded-lg">
           <div className="w-full h-full flex flex-col items-center justify-center relative">
             <p className="text-xl text-secondary font-medium text-center mb-2">Permission Denied</p>

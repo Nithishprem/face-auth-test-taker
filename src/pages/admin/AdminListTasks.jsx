@@ -1,14 +1,16 @@
-import TopBar from "../../components/TopBar";
+import TopBar from "../../components/admin/TopBar";
 import Box from "@mui/material/Box";
 import { DataGrid } from "@mui/x-data-grid";
-import { Button } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { Button, Link as Muilink } from "@mui/material";
+import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getAwarenessTasks } from "../../services/services";
 import CircularProgress from "@mui/material/CircularProgress";
+import moment from "moment";
+import { ROUTES, TASK_STATUS } from "../../utils/constants";
 
 const columns = [
-  { field: "id", headerName: "ID", width: 90 },
+  { field: "id", headerName: "Task ID", width: 90 },
   {
     field: "violatorName",
     headerName: "Violator Name",
@@ -16,7 +18,7 @@ const columns = [
   },
   {
     field: "violationType",
-    headerName: "violation Type",
+    headerName: "Violation Type",
     width: 160,
   },
   {
@@ -31,21 +33,59 @@ const columns = [
     field: "status",
     headerName: "Status",
     description: "",
-    width: 200,
-    // valueGetter: (params) => `${params.row.firstName || ""} ${params.row.lastName || ""}`,
+    width: 160,
   },
-];
+  {
+    field: "completionDetails",
+    headerName: "Task Completion",
+    description: "",
+    width: 150,
+    renderCell: (params) => {
+      return <Link>View</Link>;
+    },
+  },
+  {
+    field: "drivingLicense",
+    headerName: "Driving License",
+    width: 200,
+  },
+  {
+    field: "violationTicket",
+    headerName: "Challan Ticket",
+    width: 160,
+    valueGetter: (params) => {
+      if (params.value) {
+        return params.value;
+      } else {
+        return "Not raised";
+      }
+    },
+  },
+  {
+    field: "createdAt",
+    headerName: "Date Created",
+    valueGetter: (params) => {
+      return moment(params?.createdAt).format("DD MMM YY, h:mm a");
+    },
+    width: 160,
+  },
+  {
+    field: "awareness",
+    headerName: "Awareness Content",
+    renderCell: (params) => {
+      let awarenessContentId = params.row.awarenessContentId;
 
-const rows = [
-  { id: 1, violatorName: "Snow", violationType: "Jon", phoneNumber: 9999999999, status: "pending" },
-  { id: 2, violatorName: "Lannister", violationType: "Cersei", phoneNumber: 9999999999, status: "pending" },
-  { id: 3, violatorName: "Lannister", violationType: "Jaime", phoneNumber: 9999999999, status: "pending" },
-  { id: 4, violatorName: "Stark", violationType: "Arya", phoneNumber: 9999999999, status: "completed" },
-  { id: 5, violatorName: "Targaryen", violationType: "Daenerys", phoneNumber: 9999999999, status: "completed" },
-  { id: 6, violatorName: "Melisandre", violationType: null, phoneNumber: 9999999999, status: "completed" },
-  { id: 7, violatorName: "Clifford", violationType: "Ferrara", phoneNumber: 9999999999, status: "pending" },
-  { id: 8, violatorName: "Frances", violationType: "Rossini", phoneNumber: 9999999999, status: "pending" },
-  { id: 9, violatorName: "Roxie", violationType: "Harvey", phoneNumber: 9999999999, status: "pending" },
+      console.log("awarenessContent", awarenessContentId);
+      return (
+        <Button
+          onClick={() => {
+            navigate(ROUTES.admin.viewAwarenessContent.replace(":id", awarenessContentId));
+          }}
+          size="small"
+        ></Button>
+      );
+    },
+  },
 ];
 
 function AdminListTasks() {
@@ -54,6 +94,102 @@ function AdminListTasks() {
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState("");
   const [rows, setRows] = useState([]);
+  const [columns, setColumns] = useState([
+    { field: "id", headerName: "Task ID", width: 90 },
+    {
+      field: "violatorName",
+      headerName: "Violator Name",
+      width: 160,
+    },
+    {
+      field: "violationType",
+      headerName: "Violation Type",
+      width: 160,
+    },
+    {
+      field: "phoneNumber",
+      headerName: "Phone",
+      type: "number",
+      headerAlign: "left",
+      align: "left",
+      width: 200,
+    },
+    {
+      field: "status",
+      headerName: "Status",
+      description: "",
+      width: 160,
+    },
+    {
+      field: "completionDetails",
+      headerName: "Task Completion",
+      description: "",
+      width: 150,
+      renderCell: ({ row }) => {
+        let awarenessTaskId = row.id;
+
+        let { status, completionDetails } = row;
+
+        if (status === TASK_STATUS.completed && completionDetails) {
+          return (
+            <Button
+              onClick={() => {
+                console.log();
+                navigate(ROUTES.admin.viewAssessmentResult.replace(":id", awarenessTaskId));
+              }}
+              size="small"
+              variant="outlined"
+            >
+              View
+            </Button>
+          );
+        } else {
+          return "Not Completed";
+        }
+      },
+    },
+    {
+      field: "violationTicket",
+      headerName: "Challan Ticket",
+      width: 160,
+      valueGetter: (params) => {
+        if (params.value) {
+          return params.value;
+        } else {
+          return "Not raised";
+        }
+      },
+    },
+    {
+      field: "createdAt",
+      headerName: "Date Created",
+      valueGetter: (params) => {
+        return moment(params?.createdAt).format("DD MMM YY, h:mm a");
+      },
+      width: 160,
+    },
+    {
+      field: "awareness",
+      headerName: "Awareness Content",
+      renderCell: (params) => {
+        let awarenessContentId = params.row.awarenessContentId;
+
+        console.log("awarenessContent", awarenessContentId);
+        return (
+          <Button
+            onClick={() => {
+              console.log();
+              navigate(ROUTES.admin.viewAwarenessContent.replace(":id", awarenessContentId));
+            }}
+            size="small"
+            variant="outlined"
+          >
+            View
+          </Button>
+        );
+      },
+    },
+  ]);
 
   const fetchAllTasks = async () => {
     try {
@@ -68,6 +204,10 @@ function AdminListTasks() {
           violationType: task.violationType,
           phoneNumber: task.phoneNumber,
           status: task.status,
+          createdAt: task.createdAt,
+          completionDetails: task?.completionDetails,
+          awarenessContent: task?.awarenessContent,
+          awarenessContentId: task?.awarenessContentId,
         };
       });
 
@@ -114,7 +254,12 @@ function AdminListTasks() {
     <div className="w-full mb-20">
       <TopBar />
       <div className="max-w-full flex flex-col items-center justify-start pt-20 mx-10">
-        <div className="w-full flex justify-end items-center py-4">
+        <div className="w-full flex justify-between items-end py-4">
+          <div className="flex flex-col gap-1">
+            <p className="text-xl font-medium">Awareness Tasks</p>
+            <p className="text-base font-normal text-[#757575]">create awareness tasks for Road Safety violation</p>
+          </div>
+
           <Button
             variant="contained"
             onClick={() => {
@@ -130,9 +275,12 @@ function AdminListTasks() {
             rows={rows}
             columns={columns}
             initialState={{
+              sorting: {
+                sortModel: [{ field: "id", sort: "desc" }],
+              },
               pagination: {
                 paginationModel: {
-                  pageSize: 5,
+                  pageSize: 25,
                 },
               },
             }}

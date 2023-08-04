@@ -1,9 +1,10 @@
 import { Button, TextField } from "@mui/material";
 import React, { useContext, useEffect, useState } from "react";
-import { getUser, loginUser, userLoginRegister } from "../../services/services";
+import { getUser, loginUser, otpAuth, userLoginRegister } from "../../services/services";
 import { useNavigate } from "react-router-dom";
 import UserContext from "../../context/UserContent";
 import { LoadingButton } from "@mui/lab";
+import { ROUTES } from "../../utils/constants";
 
 function PhoneLoginOTP({ verificationDetails, number }) {
   const [error, setError] = useState("");
@@ -12,36 +13,63 @@ function PhoneLoginOTP({ verificationDetails, number }) {
   const navigate = useNavigate();
   const { handleLogin } = useContext(UserContext);
 
+  // const handleVerifyOtp = async (e) => {
+  //   try {
+  //     e.preventDefault();
+  //     setSubmitting(true);
+  //     const res = await verificationDetails.confirm(code);
+
+  //     // console.log("res", res.user);
+  //     // console.log("token", res._tokenResponse);
+  //     await handleSignIn(res);
+  //   } catch (error) {
+  //     console.log("error", error.message);
+  //     setError(error.message);
+  //   }
+  // };
+
+  // const handleSignIn = async (optRes) => {
+  //   try {
+  //     const body = {
+  //       // phoneNumber: number,
+  //       // isAdmin: true,
+  //     };
+
+  //     // console.log("response", optRes?._tokenResponse?.idToken);
+  //     const idToken = optRes?._tokenResponse?.idToken;
+
+  //     // console.log("idToken", idToken, JSON.stringify(idToken));
+  //     const res = await loginUser(body, idToken);
+  //     // console.log("signInRes", res);
+
+  //     let data = res?.data;
+
+  //     localStorage.setItem("accessToken", data.accessToken);
+  //     localStorage.setItem("refreshToken", data.refreshToken);
+
+  //     const profileRes = await getUser();
+
+  //     const user = profileRes?.data;
+
+  //     handleLogin(user);
+  //     navigate("/admin/listTasks");
+  //   } catch (error) {
+  //     // console.log("error", JSON.stringify(error));
+  //     setError(error.message);
+  //     setSubmitting(false);
+  //   }
+  // };
+
   const handleVerifyOtp = async (e) => {
-    try {
-      e.preventDefault();
-      setSubmitting(true);
-      const res = await verificationDetails.confirm(code);
-
-      // console.log("res", res.user);
-      // console.log("token", res._tokenResponse);
-      await handleSignIn(res);
-    } catch (error) {
-      console.log("error", error.message);
-      setError(error.message);
-    }
-  };
-
-  const handleSignIn = async (optRes) => {
+    e.preventDefault();
     try {
       const body = {
-        // phoneNumber: number,
-        // isAdmin: true,
+        authType: "phone_number",
+        authUser: number,
+        authPass: code,
       };
-
-      // console.log("response", optRes?._tokenResponse?.idToken);
-      const idToken = optRes?._tokenResponse?.idToken;
-
-      // console.log("idToken", idToken, JSON.stringify(idToken));
-      const res = await loginUser(body, idToken);
-      // console.log("signInRes", res);
-
-      let data = res?.data;
+      const res = await otpAuth(body);
+      const data = res?.data;
 
       localStorage.setItem("accessToken", data.accessToken);
       localStorage.setItem("refreshToken", data.refreshToken);
@@ -51,11 +79,14 @@ function PhoneLoginOTP({ verificationDetails, number }) {
       const user = profileRes?.data;
 
       handleLogin(user);
-      navigate("/admin/listTasks");
+      navigate(ROUTES.admin.listTasks);
     } catch (error) {
-      // console.log("error", JSON.stringify(error));
-      setError(error.message);
-      setSubmitting(false);
+      console.log("error", error);
+      if (error?.message) {
+        setError(error?.message);
+      } else {
+        setError("Error submitting the request");
+      }
     }
   };
 
@@ -69,7 +100,7 @@ function PhoneLoginOTP({ verificationDetails, number }) {
     <section className="bg-gray-50">
       <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
         <a href="#" className="flex items-center mb-6 text-2xl font-semibold text-gray-900">
-          Road Safety-NearBuzz
+          Road Safety Awareness - NearBuzz
         </a>
         <div className="w-full bg-white rounded-lg shadow md:mt-0 sm:max-w-md xl:p-0">
           <div className="p-6 space-y-4 md:space-y-6 sm:p-8">

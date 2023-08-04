@@ -24,16 +24,18 @@ export const routes = {
   login: "/login",
 };
 
-export const BEST_MATCH_DISTANCE = 0.45;
+export const BEST_MATCH_DISTANCE = 0.55;
 
-export const BEST_MATCH_DISTANCE_VIGILANCE = 0.5;
+export const BEST_MATCH_DISTANCE_VIGILANCE = 0.65;
+
+export const IMAGE_DETECTION_SCORE = 0.6;
 
 export const ROAD_SAFETY_VIDEO = import.meta.env.VITE_VIDEO;
 
 export const VIOLATION_TYPES = [
   {
-    value: "SINGAL_JUMP",
-    label: "SINGAL_JUMP",
+    value: "SIGNAL_JUMP",
+    label: "SIGNAL_JUMP",
   },
   {
     value: "NO_HELMET",
@@ -60,10 +62,17 @@ export const ROUTES = {
     login: "/admin/phone-login",
     listTasks: "/admin/listTasks",
     createTask: "/admin/createTask",
+    viewAwarenessContent: "/admin/view/awarenessContent/:id",
+    viewAssessmentResult: "/admin/view/assessmentResult/:id",
   },
   user: {
     login: "/user/phone-login",
-    assessment: "/user/assessment/:id",
+    assessment: "/user/awareness/:id",
     taskNotFound: "/user/taskNotFound",
   },
+};
+
+export const TASK_STATUS = {
+  created: "CREATED",
+  completed: "COMPLETED",
 };

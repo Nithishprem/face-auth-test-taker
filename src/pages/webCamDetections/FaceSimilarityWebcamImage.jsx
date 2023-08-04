@@ -68,6 +68,9 @@ function FaceSimilarityWebcamImage() {
         const detections1 = await faceapi.detectSingleFace(canvas1).withFaceLandmarks().withFaceDescriptor();
         const detections2 = await faceapi.detectSingleFace(canvas2).withFaceLandmarks().withFaceDescriptor();
 
+        console.log("detection1 score", detections1?.detection?._score);
+        console.log("detection2 score", detections2?.detection?._score);
+
         if (detections1 && detections2) {
           // Draw face detection features on canvas
           faceapi.draw.drawDetections(canvas1, detections1);

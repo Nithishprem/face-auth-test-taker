@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
-import TopBar from "../../components/TopBar";
+import TopBar from "../../components/admin/TopBar";
 import { Box, Button, MenuItem, Select, TextField } from "@mui/material";
-import { VIOLATION_TYPES } from "../../utils/constants";
-import { MuiTelInput, matchIsValidTel } from "mui-tel-input";
+import { ROUTES, VIOLATION_TYPES, routes } from "../../utils/constants";
+import { MuiTelInput } from "mui-tel-input";
 import { createAwarenessTask } from "../../services/services";
 import LoadingButton from "@mui/lab/LoadingButton";
+import { useNavigate } from "react-router-dom";
 
 function AdminCreateTask() {
   const [formData, setFormData] = useState({
@@ -19,6 +20,7 @@ function AdminCreateTask() {
 
   const [submitError, setSubmitError] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     // console.log("name", e.target.name, e.target.value);
@@ -50,6 +52,7 @@ function AdminCreateTask() {
       setSubmitting(true);
       const res = await createAwarenessTask(formData);
       console.log("create task response", res);
+      navigate(ROUTES.admin.listTasks);
       setSubmitting(false);
     } catch (error) {
       console.log("error", error);
@@ -62,6 +65,10 @@ function AdminCreateTask() {
       }
       setSubmitting(false);
     }
+  };
+
+  const handleCancel = () => {
+    navigate(ROUTES.admin.listTasks);
   };
 
   useEffect(() => {
@@ -97,17 +104,6 @@ function AdminCreateTask() {
           </div>
           <div className="w-full">
             <p className="text-base font-normal text-gray-600 mb-2">Phone Number</p>
-            {/* <TextField
-              id="outlined-basic"
-              fullWidth
-              label=""
-              placeholder="Enter"
-              variant="outlined"
-              onChange={handleChange}
-              value={formData["number"]}
-              name="number"
-              size="small"
-            /> */}
 
             <MuiTelInput
               onChange={handlePhoneInput}
@@ -210,28 +206,28 @@ function AdminCreateTask() {
           </div>
           <div className="col-span-2 flex flex-col items-center justify-center gap-4 mt-5">
             <p className={`text-red-500 text-sm font-normal h-6 ${submitError ? "visible" : ""}`}>{submitError}</p>
-            <LoadingButton
-              //   color="secondary"
-              onClick={handleSubmit}
-              sx={{
-                minWidth: "200px",
-              }}
-              loading={submitting}
-              //   loadingPosition="start"
-              //   startIcon={<SaveIcon />}
-              variant="contained"
-            >
-              <span>Submit</span>
-            </LoadingButton>
-            {/* <Button
-              onClick={handleSubmit}
-              variant="contained"
-              sx={{
-                minWidth: "200px",
-              }}
-            >
-              Submit
-            </Button> */}
+            <div className="flex justify-center items-center gap-4">
+              <Button
+                onClick={handleCancel}
+                sx={{
+                  minWidth: "150px",
+                }}
+                variant="outlined"
+              >
+                Cancel
+              </Button>
+
+              <LoadingButton
+                onClick={handleSubmit}
+                sx={{
+                  minWidth: "200px",
+                }}
+                loading={submitting}
+                variant="contained"
+              >
+                <span>Submit</span>
+              </LoadingButton>
+            </div>
           </div>
         </div>
       </div>

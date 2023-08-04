@@ -1,7 +1,10 @@
 import axios from "axios";
 import jwt_decode from "jwt-decode";
 import {
+  AUTH_OTP,
+  AUTH_OTP_TOKEN,
   AUTH_TOKEN,
+  AWARENESS_CONTENT_BY_ID,
   AWARENESS_TASKS,
   AWARENESS_TASKS_BY_ID,
   CHECK_USER_EXISTS,
@@ -103,6 +106,34 @@ export const getAwarenessTasksById = async (id) => {
   return res;
 };
 
+export const updateAwarenessTaskById = async (body, id) => {
+  const endPoint = AWARENESS_TASKS_BY_ID.replace("##id##", id);
+  const token = await getAccessToken();
+  const Authorization = "Bearer " + token;
+
+  const res = await axios.put(endPoint, body, {
+    headers: {
+      Authorization,
+    },
+  });
+
+  return res;
+};
+
+export const getAwarenessContentById = async (id) => {
+  const endPoint = AWARENESS_CONTENT_BY_ID.replace("##id##", id);
+  const token = await getAccessToken();
+  const Authorization = "Bearer " + token;
+
+  const res = await axios.get(endPoint, {
+    headers: {
+      Authorization,
+    },
+  });
+
+  return res;
+};
+
 export const loginUser = async (body, token) => {
   const endpoint = AUTH_TOKEN;
 
@@ -135,6 +166,41 @@ export const postUserExists = async (number) => {
   const endPoint = CHECK_USER_EXISTS;
   const res = await axios.post(endPoint, {
     phone_number: number,
+  });
+
+  return res;
+};
+
+export const sendOtp = async (number) => {
+  const endPoint = AUTH_OTP;
+  const res = await axios.post(
+    endPoint,
+    {},
+    {
+      params: {
+        phone_number: number,
+      },
+    }
+  );
+
+  // const res = await fetch(
+  //   endPoint +
+  //     "?" +
+  //     new URLSearchParams({
+  //       phone_number: number,
+  //     }),
+  //   {
+  //     method: "POST",
+  //   }
+  // );
+
+  return res;
+};
+
+export const otpAuth = async (body) => {
+  const endPoint = AUTH_OTP_TOKEN;
+  const res = await axios.post(endPoint, {
+    ...body,
   });
 
   return res;

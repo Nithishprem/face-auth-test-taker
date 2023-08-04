@@ -3,7 +3,7 @@ import { FormControl } from "@mui/base";
 import { Button, Card, FormControlLabel, FormLabel, Radio, RadioGroup } from "@mui/material";
 import UserContext from "../context/UserContent";
 import { Navigate, useNavigate } from "react-router-dom";
-import TopBar from "../components/TopBar";
+import TopBar from "../components/user/TopBar";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import PauseIcon from "@mui/icons-material/Pause";
 import WebcamFaceAuth2 from "../components/WebcamFaceAuth2";

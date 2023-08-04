@@ -3,9 +3,11 @@ import UserContext from "../../context/UserContent";
 import { Navigate, useLocation, useNavigate, useParams } from "react-router-dom";
 import { ROUTES, routes } from "../../utils/constants";
 import { getAwarenessTasksById } from "../../services/services";
-import TopBar from "../../components/TopBar";
+import TopBar from "../../components/user/TopBar";
 import { CircularProgress } from "@mui/material";
 import DetectUserFaceStep from "../../components/assessmentsSteps/DetectUserFaceStep";
+import UserAssessment from "../../components/user/UserAssessment";
+import AssessmentResult from "../../components/user/AssessmentResult";
 
 function ViolationAssessmentPage() {
   const { user, handleDestinationSave } = useContext(UserContext);
@@ -36,8 +38,9 @@ function ViolationAssessmentPage() {
     }
   };
 
-  const handleSaveImage = (img) => {
+  const handleNext = (img) => {
     setImgToCompare(img);
+    setTaskStep(2);
   };
 
   useEffect(() => {
@@ -47,7 +50,6 @@ function ViolationAssessmentPage() {
   if (!user) {
     handleDestinationSave(location.pathname);
     return <Navigate to={ROUTES.user.login} />;
-    // navigate(ROUTES.user.login);
   }
 
   if (loading) {
@@ -76,9 +78,18 @@ function ViolationAssessmentPage() {
     <div className="w-full mb-20">
       <TopBar />
       <div className="max-w-full flex flex-col items-center justify-start pt-20 mx-10">
-        {taskStep === 1 && (
-          <DetectUserFaceStep setTaskStep={setTaskStep} taskData={taskData} handleSaveImage={handleSaveImage} />
+        {taskStep === 1 && <DetectUserFaceStep setTaskStep={setTaskStep} taskData={taskData} handleNext={handleNext} />}
+
+        {taskStep === 2 && (
+          <UserAssessment
+            setTaskStep={setTaskStep}
+            taskData={taskData}
+            setTaskData={setTaskData}
+            imgToCompare={imgToCompare}
+          />
         )}
+
+        {taskStep === 3 && <AssessmentResult taskData={taskData} />}
       </div>
     </div>
   );
